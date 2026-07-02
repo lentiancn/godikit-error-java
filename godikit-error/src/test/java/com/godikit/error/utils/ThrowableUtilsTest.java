@@ -27,16 +27,16 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class ThrowableUtilsTest {
+public class ThrowableUtilsTest {
 
     @Test
-    void toString_NullThrowable_ReturnsNullString() {
+    public void toString_ExpectNullString_WhenInputIsNull() {
         String result = ThrowableUtils.toString(null);
         assertEquals("null", result);
     }
 
     @Test
-    void toString_NormalException_ReturnsStackTrace() {
+    public void toString_ExpectStackTrace_WhenNormalException() {
         NullPointerException npe = new NullPointerException("test message");
         String result = ThrowableUtils.toString(npe);
 
@@ -46,7 +46,7 @@ class ThrowableUtilsTest {
     }
 
     @Test
-    void toString_ExceptionWithCause_ReturnsChainedStackTrace() {
+    public void toString_ExpectChainedStackTrace_WhenExceptionWithCause() {
         RuntimeException cause = new IllegalArgumentException("cause message");
         RuntimeException exception = new RuntimeException("wrapper message", cause);
         String result = ThrowableUtils.toString(exception);
@@ -59,7 +59,7 @@ class ThrowableUtilsTest {
     }
 
     @Test
-    void toString_EmptyMessageException_ReturnsClassNameOnly() {
+    public void toString_ExpectClassNameOnly_WhenExceptionWithEmptyMessage() {
         RuntimeException exception = new RuntimeException();
         String result = ThrowableUtils.toString(exception);
 
