@@ -42,7 +42,7 @@ public class ThrowableUtils {
      * @param throwable the throwable to convert, may be null
      * @return the full stack trace as a string, or "null" if input is null
      */
-    public static String toString(Throwable throwable) {
+    public static String toString(final Throwable throwable) {
         if (throwable == null) {
             return "null";
         }
