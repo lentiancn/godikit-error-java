@@ -27,16 +27,16 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class ThrowableUtilsTest {
+class ThrowableUtilsTest {
 
     @Test
-    public void toString_ExpectNullString_WhenInputIsNull() {
+    void toString_ExpectNullString_WhenInputIsNull() {
         String result = ThrowableUtils.toString(null);
         assertEquals("null", result);
     }
 
     @Test
-    public void toString_ExpectStackTrace_WhenNormalException() {
+    void toString_ExpectStackTrace_WhenNormalException() {
         NullPointerException npe = new NullPointerException("test message");
         String result = ThrowableUtils.toString(npe);
 
@@ -46,7 +46,7 @@ public class ThrowableUtilsTest {
     }
 
     @Test
-    public void toString_ExpectChainedStackTrace_WhenExceptionWithCause() {
+    void toString_ExpectChainedStackTrace_WhenExceptionWithCause() {
         RuntimeException cause = new IllegalArgumentException("cause message");
         RuntimeException exception = new RuntimeException("wrapper message", cause);
         String result = ThrowableUtils.toString(exception);
@@ -59,11 +59,26 @@ public class ThrowableUtilsTest {
     }
 
     @Test
-    public void toString_ExpectClassNameOnly_WhenExceptionWithEmptyMessage() {
+    void toString_ExpectClassNameOnly_WhenExceptionWithEmptyMessage() {
         RuntimeException exception = new RuntimeException();
         String result = ThrowableUtils.toString(exception);
 
         assertNotNull(result);
         assertTrue(result.contains("RuntimeException"));
+    }
+
+    @Test
+    void toString_ExpectFallbackToToString_WhenPrintStackTraceFails() {
+        RuntimeException exception = new RuntimeException("fallback test") {
+            @Override
+            public void printStackTrace(java.io.PrintWriter s) {
+                throw new RuntimeException("printStackTrace failed");
+            }
+        };
+
+        String result = ThrowableUtils.toString(exception);
+
+        assertNotNull(result);
+        assertEquals(exception.toString(), result);
     }
 }
