@@ -68,6 +68,12 @@ public class GlobalException extends Exception {
         errorCode = ErrorCodeRegistry.getInstance().getByCode(code, BaseErrorCode.SYSTEM_ERROR);
     }
 
+    public GlobalException() {
+        super();
+        errorSource = "unknown";
+        errorCode = BaseErrorCode.SYSTEM_ERROR;
+    }
+
     public static GlobalRuntimeException toGlobalRuntimeException(GlobalException exception) {
         if (exception == null) {
             return null;
