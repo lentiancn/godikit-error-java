@@ -14,9 +14,9 @@ English
 
 ## Modules
 
-| Module          | Purpose                              |
-|-----------------|--------------------------------------|
-| `godikit-error` | Core API (ThrowableUtils)            |
+| Module          | Purpose                   |
+|-----------------|---------------------------|
+| `godikit-error` | Core API (ThrowableUtils) |
 
 ## Quick Start
 
