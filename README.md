@@ -16,8 +16,8 @@ English
 
 ## Modules
 
-| Module          | Purpose                                              |
-|-----------------|------------------------------------------------------|
+| Module          | Purpose                                               |
+|-----------------|-------------------------------------------------------|
 | `godikit-error` | Core API (ErrorCode, GlobalException, ThrowableUtils) |
 
 ## Quick Start
@@ -28,7 +28,7 @@ English
 <dependency>
     <groupId>com.godikit.error</groupId>
     <artifactId>godikit-error</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
 </dependency>
 ```
 
