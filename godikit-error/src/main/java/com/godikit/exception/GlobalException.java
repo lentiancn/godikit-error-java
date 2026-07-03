@@ -40,6 +40,12 @@ public class GlobalException extends Exception {
         this.errorCode = BaseErrorCode.SYSTEM_ERROR;
     }
 
+    public GlobalException(ErrorCode errorCode) {
+        super(Optional.ofNullable(errorCode).map(ErrorCode::getDescription).orElse(null));
+        this.errorSource = "unknown";
+        this.errorCode = errorCode;
+    }
+
     public GlobalException(String message, ErrorCode errorCode) {
         super(defaultIfNull(message, Optional.ofNullable(errorCode).map(ErrorCode::getDescription).orElse(null)));
         this.errorSource = "unknown";

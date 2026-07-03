@@ -40,6 +40,12 @@ public class GlobalRuntimeException extends RuntimeException {
         this.errorCode = BaseErrorCode.SYSTEM_ERROR;
     }
 
+    public GlobalRuntimeException(ErrorCode errorCode) {
+        super(Optional.ofNullable(errorCode).map(ErrorCode::getDescription).orElse(null));
+        this.errorSource = "unknown";
+        this.errorCode = errorCode;
+    }
+
     public GlobalRuntimeException(String message, ErrorCode errorCode) {
         super(defaultIfNull(message, Optional.ofNullable(errorCode).map(ErrorCode::getDescription).orElse(null)));
         this.errorSource = "unknown";
