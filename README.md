@@ -8,15 +8,17 @@ English
 
 ## Features
 
-- Unified Error utility for Java 8+
-- Throwable stack trace conversion
-- Utility methods for error handling
+- **Plugin-based Error Codes**: Use Java SPI to register error codes dynamically
+- **Two Exception Types**: `GlobalException` (checked) and `GlobalRuntimeException` (unchecked)
+- **Error Source Tracking**: Track where errors originate (server, client, mobile, etc.)
+- **Unified Error Format**: Consistent error message format across applications
+- **Throwable Utilities**: Convert stack traces to strings easily
 
 ## Modules
 
-| Module          | Purpose                   |
-|-----------------|---------------------------|
-| `godikit-error` | Core API (ThrowableUtils) |
+| Module          | Purpose                                              |
+|-----------------|------------------------------------------------------|
+| `godikit-error` | Core API (ErrorCode, GlobalException, ThrowableUtils) |
 
 ## Quick Start
 
@@ -32,7 +34,81 @@ English
 
 ## Usage
 
+### Define Error Codes
+
 ```java
+// Implement ErrorCode interface with enum
+public enum MyErrorCode implements ErrorCode {
+    USER_NOT_FOUND("10001", "User Not Found"),
+    INVALID_PARAM("10002", "Invalid Parameter");
+
+    private final String code;
+    private final String description;
+
+    MyErrorCode(String code, String description) {
+        this.code = code;
+        this.description = description;
+    }
+
+    @Override
+    public String getName() {
+        return name();
+    }
+
+    @Override
+    public String getCode() {
+        return code;
+    }
+
+    @Override
+    public String getDescription() {
+        return description;
+    }
+}
+```
+
+### Register Error Code Provider
+
+Create SPI configuration file:
+
+```
+# src/main/resources/META-INF/services/com.godikit.error.code.ErrorCodeProvider
+com.example.myapp.MyErrorCodeProvider
+```
+
+```java
+public class MyErrorCodeProvider implements ErrorCodeProvider {
+    @Override
+    public void register(List<ErrorCode> codes) {
+        codes.add(MyErrorCode.USER_NOT_FOUND);
+        codes.add(MyErrorCode.INVALID_PARAM);
+    }
+}
+```
+
+### Throw and Catch Exceptions
+
+```java
+// Throw exception
+throw new GlobalRuntimeException(MyErrorCode.USER_NOT_FOUND);
+
+// Or with message
+throw new GlobalException("User id: 123", MyErrorCode.USER_NOT_FOUND);
+
+// Convert between exception types
+GlobalRuntimeException runtimeEx = GlobalException.toGlobalRuntimeException(ex);
+```
+
+### Error Message Format
+
+```
+[server-a] [10001 User Not Found] java.lang.RuntimeException: User id: 123
+```
+
+### Throwable Utils
+
+```java
+// Convert exception to stack trace string
 String stackTrace = ThrowableUtils.toString(exception);
 ```
 
