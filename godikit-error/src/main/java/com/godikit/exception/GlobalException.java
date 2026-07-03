@@ -65,21 +65,21 @@ public class GlobalException extends Exception {
     }
 
     public GlobalException(String message, String code) {
-        super(defaultIfNull(message, ErrorCodeRegistry.getInstance().getByCode(code, BaseErrorCode.SYSTEM_ERROR).getDescription()));
+        super(defaultIfNull(message, ErrorCodeRegistry.getInstance().get(code, BaseErrorCode.SYSTEM_ERROR).getDescription()));
         errorSource = "unknown";
-        errorCode = ErrorCodeRegistry.getInstance().getByCode(code, BaseErrorCode.SYSTEM_ERROR);
+        errorCode = ErrorCodeRegistry.getInstance().get(code, BaseErrorCode.SYSTEM_ERROR);
     }
 
     public GlobalException(String message, Throwable cause, String code) {
-        super(defaultIfNull(message, ErrorCodeRegistry.getInstance().getByCode(code, BaseErrorCode.SYSTEM_ERROR).getDescription()), cause);
+        super(defaultIfNull(message, ErrorCodeRegistry.getInstance().get(code, BaseErrorCode.SYSTEM_ERROR).getDescription()), cause);
         errorSource = "unknown";
-        errorCode = ErrorCodeRegistry.getInstance().getByCode(code, BaseErrorCode.SYSTEM_ERROR);
+        errorCode = ErrorCodeRegistry.getInstance().get(code, BaseErrorCode.SYSTEM_ERROR);
     }
 
     public GlobalException(Throwable cause, String code) {
         super(cause);
         errorSource = "unknown";
-        errorCode = ErrorCodeRegistry.getInstance().getByCode(code, BaseErrorCode.SYSTEM_ERROR);
+        errorCode = ErrorCodeRegistry.getInstance().get(code, BaseErrorCode.SYSTEM_ERROR);
     }
 
     public static GlobalRuntimeException toGlobalRuntimeException(GlobalException exception) {

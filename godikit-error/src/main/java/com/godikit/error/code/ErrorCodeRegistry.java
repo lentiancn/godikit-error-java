@@ -48,26 +48,21 @@ public class ErrorCodeRegistry {
         }
     }
 
-    public ErrorCode getByCode(String code) {
+    public ErrorCode get(String codeOrName) {
         if (!initialized) {
             initialize();
         }
-        return CODE_MAP.get(code);
+        ErrorCode errorCode = CODE_MAP.get(codeOrName);
+
+        return errorCode != null ? errorCode : NAME_MAP.get(codeOrName);
     }
 
-    public ErrorCode getByCode(String code, ErrorCode def) {
-        ErrorCode errorCode = getByCode(code);
+    public ErrorCode get(String code, ErrorCode def) {
+        ErrorCode errorCode = get(code);
         if (errorCode != null) {
             return errorCode;
         }
         return def;
-    }
-
-    public ErrorCode getByName(String name) {
-        if (!initialized) {
-            initialize();
-        }
-        return NAME_MAP.get(name);
     }
 
     public List<ErrorCode> getAll() {
