@@ -6,9 +6,13 @@ import lombok.Getter;
 public enum BaseErrorCode implements ErrorCode {
 
     NO_ERROR("000000", "No Error"),
+
     SYSTEM_ERROR("000010", "System Error"),
-    PARAM_MISSING_ERROR("000020", "Parameter Missing Error"),
-    PARAM_INVALID_ERROR("000021", "Parameter Invalid Error");
+    UNKNOWN_ERROR("000011", "Unknown Error"),
+
+    PARAM_ERROR("000020", "Parameter Error"),
+    PARAM_MISSING_ERROR("000021", "Parameter Missing Error"),
+    PARAM_INVALID_ERROR("000022", "Parameter Invalid Error");
 
     private final String code;
     private final String description;

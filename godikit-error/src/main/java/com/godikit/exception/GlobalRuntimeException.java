@@ -1,9 +1,11 @@
-package com.godikit.error;
+package com.godikit.exception;
 
 import com.godikit.error.code.BaseErrorCode;
 import com.godikit.error.code.ErrorCode;
 import com.godikit.error.code.ErrorCodeRegistry;
 import lombok.Getter;
+
+import java.util.Optional;
 
 import static com.godikit.error.utils.StringUtils.defaultIfNull;
 
@@ -14,14 +16,20 @@ public class GlobalRuntimeException extends RuntimeException {
 
     private final ErrorCode errorCode;
 
-    public GlobalRuntimeException(String message, Throwable cause) {
-        super(defaultIfNull(message, BaseErrorCode.SYSTEM_ERROR.getDescription()), cause);
-        this.errorSource = "unknown";
-        this.errorCode = BaseErrorCode.SYSTEM_ERROR;
+    public GlobalRuntimeException() {
+        super();
+        errorSource = "unknown";
+        errorCode = BaseErrorCode.SYSTEM_ERROR;
     }
 
     public GlobalRuntimeException(String message) {
         super(defaultIfNull(message, BaseErrorCode.SYSTEM_ERROR.getDescription()));
+        this.errorSource = "unknown";
+        this.errorCode = BaseErrorCode.SYSTEM_ERROR;
+    }
+
+    public GlobalRuntimeException(String message, Throwable cause) {
+        super(defaultIfNull(message, BaseErrorCode.SYSTEM_ERROR.getDescription()), cause);
         this.errorSource = "unknown";
         this.errorCode = BaseErrorCode.SYSTEM_ERROR;
     }
@@ -32,14 +40,14 @@ public class GlobalRuntimeException extends RuntimeException {
         this.errorCode = BaseErrorCode.SYSTEM_ERROR;
     }
 
-    public GlobalRuntimeException(String message, Throwable cause, ErrorCode errorCode) {
-        super(defaultIfNull(message, errorCode.getDescription()), cause);
+    public GlobalRuntimeException(String message, ErrorCode errorCode) {
+        super(defaultIfNull(message, Optional.ofNullable(errorCode).map(ErrorCode::getDescription).orElse(null)));
         this.errorSource = "unknown";
         this.errorCode = errorCode;
     }
 
-    public GlobalRuntimeException(String message, ErrorCode errorCode) {
-        super(defaultIfNull(message, errorCode.getDescription()));
+    public GlobalRuntimeException(String message, Throwable cause, ErrorCode errorCode) {
+        super(defaultIfNull(message, Optional.ofNullable(errorCode).map(ErrorCode::getDescription).orElse(null)), cause);
         this.errorSource = "unknown";
         this.errorCode = errorCode;
     }
@@ -50,14 +58,14 @@ public class GlobalRuntimeException extends RuntimeException {
         this.errorCode = errorCode;
     }
 
-    public GlobalRuntimeException(String message, Throwable cause, String code) {
-        super(defaultIfNull(message, ErrorCodeRegistry.getInstance().getByCode(code, BaseErrorCode.SYSTEM_ERROR).getDescription()), cause);
+    public GlobalRuntimeException(String message, String code) {
+        super(defaultIfNull(message, ErrorCodeRegistry.getInstance().getByCode(code, BaseErrorCode.SYSTEM_ERROR).getDescription()));
         errorSource = "unknown";
         errorCode = ErrorCodeRegistry.getInstance().getByCode(code, BaseErrorCode.SYSTEM_ERROR);
     }
 
-    public GlobalRuntimeException(String message, String code) {
-        super(defaultIfNull(message, ErrorCodeRegistry.getInstance().getByCode(code, BaseErrorCode.SYSTEM_ERROR).getDescription()));
+    public GlobalRuntimeException(String message, Throwable cause, String code) {
+        super(defaultIfNull(message, ErrorCodeRegistry.getInstance().getByCode(code, BaseErrorCode.SYSTEM_ERROR).getDescription()), cause);
         errorSource = "unknown";
         errorCode = ErrorCodeRegistry.getInstance().getByCode(code, BaseErrorCode.SYSTEM_ERROR);
     }
@@ -66,12 +74,6 @@ public class GlobalRuntimeException extends RuntimeException {
         super(cause);
         errorSource = "unknown";
         errorCode = ErrorCodeRegistry.getInstance().getByCode(code, BaseErrorCode.SYSTEM_ERROR);
-    }
-
-    public GlobalRuntimeException() {
-        super();
-        errorSource = "unknown";
-        errorCode = BaseErrorCode.SYSTEM_ERROR;
     }
 
     public static GlobalException toGlobalException(GlobalRuntimeException exception) {
@@ -83,5 +85,20 @@ public class GlobalRuntimeException extends RuntimeException {
                 exception.getCause(),
                 exception.getErrorCode()
         );
+    }
+
+    @Override
+    public String toString() {
+        String errorCodeStr;
+
+        if (errorCode != null) {
+            errorCodeStr = errorCode.getCode() + " " + errorCode.getDescription();
+        } else {
+            errorCodeStr = "unknown";
+        }
+
+        return "[" + errorSource + "]" +
+                " [" + errorCodeStr + "] " +
+                super.toString();
     }
 }
